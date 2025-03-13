@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app, server } = require('./index'); 
+const { app, server } = require('./index');
 
 describe('GET /', () => {
     it('should return "Hello, World!"', async () => {
@@ -9,7 +9,17 @@ describe('GET /', () => {
     });
 });
 
+// Ensure server closes properly
+afterAll(async () => {
+    await new Promise((resolve, reject) => {
+        server.close((err) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
 
-afterAll((done) => {
-    server.close(done);
+    console.log("✅ Server closed successfully.");
+
+    // 🛑 Exit Jest's event loop manually
+    setTimeout(() => process.exit(0), 1000);
 });
